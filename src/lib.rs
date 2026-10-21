@@ -1,5 +1,5 @@
 //! Departure boards from Rejseplanen as an external integration for
-//! Homewright.
+//! HomewrightHQ.
 //!
 //! Each setup is one stop with its own filters. Setups with the same access
 //! ID share one poller that asks for all their stops in a single
@@ -32,7 +32,7 @@ const STALE: StdDuration = StdDuration::from_secs(30 * 60);
 /// The search used to check an access ID.
 const PROBE: &str = "Nørreport";
 
-/// Logging to Homewright's log through stderr.
+/// Logging to HomewrightHQ's log through stderr.
 #[doc(hidden)]
 pub fn emit(level: &str, message: String) {
     thehome_plugin::log(level, message);

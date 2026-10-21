@@ -1,6 +1,6 @@
-# Rejseplanen til Homewright
+# Rejseplanen til HomewrightHQ
 
-En ekstern integration til [Homewright](https://github.com/magnusdunker/homewright), der viser de næste afgange fra et stoppested: bus, tog, S-tog, metro, letbane og færge. Den henter afgangstavlen fra Rejseplanens API 2.0, med forsinkelser og aflysninger i realtid.
+En ekstern integration til [HomewrightHQ](https://github.com/magnusdunker/homewrighthq), der viser de næste afgange fra et stoppested: bus, tog, S-tog, metro, letbane og færge. Den henter afgangstavlen fra Rejseplanens API 2.0, med forsinkelser og aflysninger i realtid.
 
 ## Adgangsnøgle
 
@@ -16,10 +16,10 @@ Det gamle API på `xmlopen.rejseplanen.dk` blev lukket i december 2024 og svarer
 
 ## Installation
 
-I Homewright: **Indstillinger → Integrationer → Fra GitHub**. Indsæt
+I HomewrightHQ: **Indstillinger → Integrationer → Fra GitHub**. Indsæt
 
 ```
-https://github.com/magnusdunker/homewright-rejseplanen
+https://github.com/magnusdunker/homewrighthq-rejseplanen
 ```
 
 og tryk **Installér**. Tilføj derefter **Rejseplanen** under **Tilføj integration**:
@@ -41,7 +41,7 @@ Filtrene kan ændres senere under integrationens indstillinger.
 
 ## Hvad du får
 
-Hvert stoppested bliver en enhed i Homewright med to sensorer:
+Hvert stoppested bliver en enhed i HomewrightHQ med to sensorer:
 
 - **Næste afgang**: tidspunktet for den næste afgang, der ikke er aflyst, med realtid, hvis Rejseplanen har det.
 - **Minutter til afgang**: antal hele minutter til den samme afgang.
@@ -72,12 +72,12 @@ Afviser Rejseplanen nøglen, kommer der en besked under **Reparationer**, og int
 
 ## Udvikling
 
-Bygget i Rust på SDK'en `thehome-plugin` fra [homewright-example-integration-rust](https://github.com/magnusdunker/homewright-example-integration-rust).
+Bygget i Rust på SDK'en `thehome-plugin` fra [homewright-example-integration-rust](https://github.com/magnusdunker/homewrighthq-example-integration-rust).
 
 - `src/api.rs`: Rejseplanens API, `location.name` og `multiDepartureBoard` i JSON
 - `src/board.rs`: filtrene og fra afgangstavlen til sensorernes tilstand
-- `src/lib.rs`: opsætningen, den fælles afhentning pr. nøgle og forbindelsen til Homewright
-- `tests/`: tests mod et falsk API med svar i Rejseplanens format i `tests/fixtures` og en falsk Homewright i `tests/host`
+- `src/lib.rs`: opsætningen, den fælles afhentning pr. nøgle og forbindelsen til HomewrightHQ
+- `tests/`: tests mod et falsk API med svar i Rejseplanens format i `tests/fixtures` og en falsk HomewrightHQ i `tests/host`
 
 ```
 cargo test

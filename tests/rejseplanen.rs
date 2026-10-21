@@ -1,5 +1,5 @@
 //! The fixtures follow the JSON that Rejseplanen's API 2.0 sends. The plugin
-//! tests play Homewright over a pipe against a fake API.
+//! tests play HomewrightHQ over a pipe against a fake API.
 
 mod host;
 
