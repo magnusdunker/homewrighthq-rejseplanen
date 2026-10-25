@@ -1,54 +1,54 @@
-# Rejseplanen til HomewrightHQ
+# Rejseplanen for HomewrightHQ
 
-En ekstern integration til [HomewrightHQ](https://github.com/magnusdunker/homewrighthq), der viser de næste afgange fra et stoppested: bus, tog, S-tog, metro, letbane og færge. Den henter afgangstavlen fra Rejseplanens API 2.0, med forsinkelser og aflysninger i realtid.
+An external integration for [HomewrightHQ](https://github.com/magnusdunker/homewrighthq) that shows the next departures from a stop: bus, train, S-train, metro, light rail and ferry. It fetches the departure board from Rejseplanen's API 2.0, with real-time delays and cancellations.
 
-## Adgangsnøgle
+## Access key
 
-Rejseplanens API kræver en adgangsnøgle (`accessId`). Den er gratis for private:
+Rejseplanen's API requires an access key (`accessId`). It is free for private users:
 
-1. Gå til [Rejseplanen Labs](https://labs.rejseplanen.dk/) og find formularen, hvor man søger om adgang til API 2.0.
-2. Vælg, at du er privat bruger, og skriv kort, hvad nøglen skal bruges til, f.eks. "afgangstavle i mit hjem".
-3. Nøglen kommer på mail. Det kan tage et par hverdage.
+1. Go to [Rejseplanen Labs](https://labs.rejseplanen.dk/) and find the form where you apply for access to API 2.0.
+2. Choose that you are a private user, and write briefly what the key will be used for, e.g. "afgangstavle i mit hjem" (departure board in my home).
+3. The key comes by email. It can take a few working days.
 
-En privat nøgle giver 50.000 kald om måneden. Integrationen spørger én gang i minuttet og hvert 5. minut mellem kl. 01 og 05. Det er omkring 39.000 kald om måneden, og det samme, uanset hvor mange stoppesteder du tilføjer med samme nøgle, for de hentes alle i ét kald.
+A private key gives 50,000 calls a month. The integration polls once a minute, and every 5 minutes between 01:00 and 05:00. That is about 39,000 calls a month, and the same no matter how many stops you add with the same key, because they are all fetched in one call.
 
-Det gamle API på `xmlopen.rejseplanen.dk` blev lukket i december 2024 og svarer ikke længere.
+The old API at `xmlopen.rejseplanen.dk` was shut down in December 2024 and no longer responds.
 
 ## Installation
 
-I HomewrightHQ: **Indstillinger → Integrationer → Fra GitHub**. Indsæt
+In HomewrightHQ: **Settings → Integrations → From GitHub**. Paste
 
 ```
 https://github.com/magnusdunker/homewrighthq-rejseplanen
 ```
 
-og tryk **Installér**. Tilføj derefter **Rejseplanen** under **Tilføj integration**:
+and press **Install**. Then add **Rejseplanen** under **Add integration**:
 
-1. Indsæt adgangsnøglen. Den prøves med det samme.
-2. Søg efter stoppestedet med navnet eller en del af det, f.eks. `Aarhus H` eller `Nørreport`.
-3. Vælg stoppestedet på listen. Samme navn kan høre til flere stoppesteder, f.eks. et for toget og et for togbussen, så nummeret står ved siden af.
-4. Vælg eventuelt, hvilke afgange der skal med.
+1. Paste the access key. It is tested straight away.
+2. Search for the stop by its name or part of it, e.g. `Aarhus H` or `Nørreport`.
+3. Choose the stop from the list. The same name can belong to several stops, e.g. one for the train and one for the rail replacement bus, so the number is shown next to it.
+4. Optionally choose which departures to include.
 
-Hvert stoppested er en opsætning for sig. Tilføj integrationen igen for det næste.
+Each stop is its own entry. Add the integration again for the next one.
 
-### Filtre
+### Filters
 
-- **Transportmidler**: bus, tog (IC, Lyn og regionaltog), S-tog, metro, letbane og færge. Ingen valgt viser alle.
-- **Linjer**: f.eks. `2A, 18` eller `A, B`. Store og små bogstaver er lige gode.
-- **Retning**: tekst, som retningen skal indeholde, f.eks. `Skejby` eller `Hillerød`. Flere adskilles med komma.
+- **Transportmidler** (means of transport): bus, train (IC, Lyn and regional trains), S-train, metro, light rail and ferry. None selected shows all.
+- **Linjer** (lines): e.g. `2A, 18` or `A, B`. Upper and lower case are treated the same.
+- **Retning** (direction): text the direction must contain, e.g. `Skejby` or `Hillerød`. Separate several with commas.
 
-Filtrene kan ændres senere under integrationens indstillinger.
+The filters can be changed later under the integration's options.
 
-## Hvad du får
+## What you get
 
-Hvert stoppested bliver en enhed i HomewrightHQ med to sensorer:
+Each stop becomes a device in HomewrightHQ with two sensors:
 
-- **Næste afgang**: tidspunktet for den næste afgang, der ikke er aflyst, med realtid, hvis Rejseplanen har det.
-- **Minutter til afgang**: antal hele minutter til den samme afgang.
+- **Næste afgang** (next departure): the time of the next departure that is not cancelled, with real time if Rejseplanen has it.
+- **Minutter til afgang** (minutes to departure): the number of whole minutes to the same departure.
 
-Står der ingen afgange inden for de næste to timer, er tilstanden `unknown`.
+If there are no departures within the next two hours, the state is `unknown`.
 
-**Næste afgang** har attributterne `line`, `name`, `type`, `direction`, `track`, `planned` og `delay` (minutter) for den næste afgang, og `departures` med de næste 10 afgange. Aflyste afgange er med i listen med `cancelled: true`:
+**Næste afgang** has the attributes `line`, `name`, `type`, `direction`, `track`, `planned` and `delay` (minutes) for the next departure, and `departures` with the next 10 departures. Cancelled departures are in the list with `cancelled: true`:
 
 ```yaml
 departures:
@@ -64,28 +64,28 @@ departures:
     part_cancelled: false
 ```
 
-**Minutter til afgang** har `line`, `direction`, `track` og `delay`.
+**Minutter til afgang** has `line`, `direction`, `track` and `delay`.
 
-Et stoppested som Nørreport St. har både perroner og busstoppesteder under sig. Deres afgange kommer med, når hovedstoppestedet er valgt.
+A stop such as Nørreport St. has both platforms and bus stops under it. Their departures are included when the main stop is selected.
 
-Afviser Rejseplanen nøglen, kommer der en besked under **Reparationer**, og integrationen beder om en ny nøgle. Svarer Rejseplanen ikke, vises de afgange, der blev hentet sidst, i op til 30 minutter. Derefter bliver sensorerne utilgængelige.
+If Rejseplanen rejects the key, a message appears under **Repairs**, and the integration asks for a new key. If Rejseplanen does not respond, the departures fetched last are shown for up to 30 minutes. After that the sensors become unavailable.
 
-## Udvikling
+## Development
 
-Bygget i Rust på SDK'en `thehome-plugin` fra [homewright-example-integration-rust](https://github.com/magnusdunker/homewrighthq-example-integration-rust).
+Built in Rust on the `thehome-plugin` SDK from [homewright-example-integration-rust](https://github.com/magnusdunker/homewrighthq-example-integration-rust).
 
-- `src/api.rs`: Rejseplanens API, `location.name` og `multiDepartureBoard` i JSON
-- `src/board.rs`: filtrene og fra afgangstavlen til sensorernes tilstand
-- `src/lib.rs`: opsætningen, den fælles afhentning pr. nøgle og forbindelsen til HomewrightHQ
-- `tests/`: tests mod et falsk API med svar i Rejseplanens format i `tests/fixtures` og en falsk HomewrightHQ i `tests/host`
+- `src/api.rs`: Rejseplanen's API, `location.name` and `multiDepartureBoard` in JSON
+- `src/board.rs`: the filters, and from the departure board to the sensors' state
+- `src/lib.rs`: the setup, the shared fetch per key and the connection to HomewrightHQ
+- `tests/`: tests against a fake API with responses in Rejseplanen's format in `tests/fixtures` and a fake HomewrightHQ in `tests/host`
 
 ```
 cargo test
 cargo build --release
 ```
 
-En ny version udgives med et tag, f.eks. `git tag v0.2.0 && git push origin v0.2.0`. Workflowet bygger til Windows, Linux (x86_64 og arm64, statisk musl) og macOS og lægger binærerne og `homewright.json` på releasen.
+A new version is released with a tag, e.g. `git tag v0.2.0 && git push origin v0.2.0`. The workflow builds for Windows, Linux (x86_64 and arm64, static musl) and macOS and puts the binaries and `homewright.json` on the release.
 
-## Licens
+## License
 
 MIT
